@@ -1,0 +1,43 @@
+site_name: dicom-forge
+site_description: Enterprise medical-imaging pipeline for 3D Slicer and ITK-SNAP
+repo_url: https://github.com/DaCameraGirl/dicom-forge
+repo_name: DaCameraGirl/dicom-forge
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Concepts: concepts.md
+  - CLI reference: cli.md
+  - API reference: api.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+            docstring_style: numpy
