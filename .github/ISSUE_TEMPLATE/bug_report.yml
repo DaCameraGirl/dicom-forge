@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a defect in dicom-forge
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Minimal steps. **Do not attach real patient data** — use synthetic DICOM
+        or describe the relevant header fields only.
+      placeholder: |
+        1. dicomforge convert ./study ./out --format nrrd
+        2. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: dicom-forge version
+      placeholder: "0.1.0 (output of `dicomforge --version`)"
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version & OS
+    validations:
+      required: true

@@ -1,0 +1,10 @@
+# Normalize line endings to LF in the repository for cross-platform consistency.
+* text=auto eol=lf
+
+# Treat these as binary so Git never munges them.
+*.dcm binary
+*.nrrd binary
+*.nii binary
+*.nii.gz binary
+*.png binary
+*.ico binary
