@@ -10,8 +10,11 @@ NRRD (`.nrrd`), and Slicer's segmentation format (`.seg.nrrd`).
 ## Install
 
 ```bash
-pip install "dicom-forge[convert]"
+pip install "dicom-anvil[convert]"
 ```
+
+> Installed as **`dicom-anvil`** (the name `dicom-forge` was already taken on
+> PyPI); imported as **`dicomforge`**. The source repository is `dicom-forge`.
 
 ## 60-second tour
 
