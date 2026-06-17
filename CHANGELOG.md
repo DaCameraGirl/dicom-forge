@@ -19,6 +19,9 @@ All notable changes to this project are documented here. The format follows
 - GitHub Actions CI: lint (ruff), type-check (mypy), test matrix (3.10–3.12).
 - Documentation site (mkdocs-material) at https://dacameragirl.github.io/dicom-forge/.
 - PyPI release pipeline via OIDC Trusted Publishing.
+- **`dicom-probe`** — a native **C++/ITK** companion CLI (`native/dicom-probe/`) that
+  reads a series through ITK's GDCM path and reports the true volume geometry as JSON.
+  Built and exercised end-to-end in CI against a generated synthetic series.
 
 ### Changed
 - Relicensed from Apache-2.0 to **PolyForm Noncommercial 1.0.0**: noncommercial use

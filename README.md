@@ -40,6 +40,9 @@ inside Slicer's Python console.
   segments.
 - **Typed & validated** — Pydantic models everywhere, `py.typed`, strict mypy.
 - **Two interfaces** — a Rich CLI (`dicomforge`) and a clean Python API.
+- **Native ITK pre-flight** — a companion C++/ITK CLI,
+  [`dicom-probe`](native/dicom-probe/), reads a series through ITK's own GDCM path
+  (the engine under Slicer/ITK-SNAP) and reports the true volume geometry as JSON.
 
 ## Installation
 
