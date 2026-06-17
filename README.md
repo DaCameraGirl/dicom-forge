@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/DaCameraGirl/dicom-forge/actions/workflows/ci.yml/badge.svg)](https://github.com/DaCameraGirl/dicom-forge/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
 
 **An enterprise-grade medical-imaging pipeline that prepares DICOM for [3D Slicer](https://www.slicer.org/) and [ITK-SNAP](http://www.itksnap.org/).**
 
@@ -106,4 +106,9 @@ ruff check . && mypy        # lint + type-check
 
 ## License
 
-[Apache-2.0](LICENSE) © Angela Hudson
+[PolyForm Noncommercial License 1.0.0](LICENSE) © Angela Hudson
+
+Noncommercial use — personal, research, educational, and other noncommercial
+purposes as defined by the license — is free. **Any commercial use requires a
+separate license from the copyright holder.** See [LICENSE](LICENSE) for the
+full terms, or open an issue to ask about commercial licensing.

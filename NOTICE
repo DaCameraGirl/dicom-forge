@@ -3,11 +3,15 @@ Copyright 2026 Angela Hudson
 
 This product includes software developed by Angela Hudson (DaCameraGirl).
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Licensed under the PolyForm Noncommercial License 1.0.0 (the "License").
+You may not use this software except in compliance with the License.
+You may obtain a copy of the License in the LICENSE file or at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://polyformproject.org/licenses/noncommercial/1.0.0
+
+Noncommercial use (personal, research, educational, and other noncommercial
+purposes as defined by the License) is permitted free of charge. Any
+commercial use requires a separate license from the copyright holder.
 
 This software prepares medical imaging data (DICOM) for downstream research
 tools. It performs best-effort de-identification only and provides no warranty
