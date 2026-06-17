@@ -16,6 +16,9 @@ It is the headless core of a two-repo system; its companion,
 [`slicer-forge`](https://github.com/DaCameraGirl/slicer-forge), wraps it in a 3D Slicer
 extension GUI.
 
+> 📌 **New here?** Read the [**project showcase**](SHOWCASE.md) for the big picture —
+> the problem, the architecture, who it's for, and the engineering highlights.
+
 ---
 
 ## Why this exists
