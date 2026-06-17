@@ -31,7 +31,7 @@ jobs:
           python-version: "3.12"
       - name: Install docs + package (mkdocstrings introspects the package)
         run: pip install -e ".[docs]"
-      - name: Build (strict: fail on broken refs/nav)
+      - name: Build site (strict mode fails on broken refs/nav)
         run: mkdocs build --strict
       - uses: actions/upload-pages-artifact@v3
         with:
