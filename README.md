@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/DaCameraGirl/dicom-forge/actions/workflows/ci.yml/badge.svg)](https://github.com/DaCameraGirl/dicom-forge/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Docs](https://img.shields.io/badge/docs-dacameragirl.github.io-blue.svg)](https://dacameragirl.github.io/dicom-forge/)
 [![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
 
 **An enterprise-grade medical-imaging pipeline that prepares DICOM for [3D Slicer](https://www.slicer.org/) and [ITK-SNAP](http://www.itksnap.org/).**
