@@ -17,5 +17,15 @@ All notable changes to this project are documented here. The format follows
 - Typer CLI: `inspect`, `qc`, `convert`.
 - Full pytest suite using synthetic DICOM (no real patient data).
 - GitHub Actions CI: lint (ruff), type-check (mypy), test matrix (3.10–3.12).
+- Documentation site (mkdocs-material) at https://dacameragirl.github.io/dicom-forge/.
+- PyPI release pipeline via OIDC Trusted Publishing.
+
+### Changed
+- Relicensed from Apache-2.0 to **PolyForm Noncommercial 1.0.0**: noncommercial use
+  (personal, research, educational) is free; any commercial use requires a separate
+  license from the copyright holder.
+- Published on PyPI as **`dicom-anvil`** (the name `dicom-forge` was already taken). The
+  import package remains `dicomforge` and the source repository stays `dicom-forge`; the
+  de-identification provenance label is unchanged.
 
 [Unreleased]: https://github.com/DaCameraGirl/dicom-forge/commits/main

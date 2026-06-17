@@ -38,7 +38,7 @@ class MissingDependencyError(DicomForgeError):
     def __init__(self, package: str, extra: str) -> None:
         super().__init__(
             f"'{package}' is required for this operation but is not installed. "
-            f"Install it with:  pip install 'dicom-forge[{extra}]'"
+            f"Install it with:  pip install 'dicom-anvil[{extra}]'"
         )
         self.package = package
         self.extra = extra

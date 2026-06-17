@@ -44,9 +44,12 @@ inside Slicer's Python console.
 ## Installation
 
 ```bash
-pip install dicom-forge            # core (ingest, de-id, QC)
-pip install "dicom-forge[convert]" # + SimpleITK/pynrrd/nibabel for conversion
+pip install dicom-anvil            # core (ingest, de-id, QC)
+pip install "dicom-anvil[convert]" # + SimpleITK/pynrrd/nibabel for conversion
 ```
+
+> **Names:** the package installs as `dicom-anvil` (the PyPI name `dicom-forge` was
+> already taken) and imports as `dicomforge`; the repository stays `dicom-forge`.
 
 > The conversion stack (SimpleITK et al.) is an **optional extra** so the core stays
 > lightweight and CI-friendly. Calling a conversion function without it raises a clear

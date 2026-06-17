@@ -3,7 +3,7 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "dicom-forge"
+name = "dicom-anvil"
 dynamic = ["version"]
 description = "Enterprise-grade medical-imaging pipeline: ingest, de-identify, convert, and QC DICOM for 3D Slicer and ITK-SNAP."
 readme = "README.md"
