@@ -6,6 +6,21 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-06-17
+
+### Added
+- **`dicom-probe`** — a native **C++/ITK** companion CLI (`native/dicom-probe/`) that
+  reads a series through ITK's GDCM path and reports the true volume geometry as JSON.
+  Built and exercised end-to-end in CI against a generated synthetic series.
+
+### Changed
+- License metadata now uses a **PEP 639 SPDX expression**
+  (`license = "PolyForm-Noncommercial-1.0.0"` with `license-files = ["LICENSE"]`),
+  replacing the `license = {file = ...}` form that dumped the full licence text into
+  PyPI's *License* field. Produces a clean `License-Expression` tag (Metadata 2.4).
+
+## [0.1.0] - 2026-06-17
+
 ### Added
 - Initial public release of `dicom-forge`.
 - DICOM ingestion with series grouping, geometry-aware slice ordering, and HU rescale.
@@ -19,15 +34,8 @@ All notable changes to this project are documented here. The format follows
 - GitHub Actions CI: lint (ruff), type-check (mypy), test matrix (3.10–3.12).
 - Documentation site (mkdocs-material) at https://dacameragirl.github.io/dicom-forge/.
 - PyPI release pipeline via OIDC Trusted Publishing.
-- **`dicom-probe`** — a native **C++/ITK** companion CLI (`native/dicom-probe/`) that
-  reads a series through ITK's GDCM path and reports the true volume geometry as JSON.
-  Built and exercised end-to-end in CI against a generated synthetic series.
 
 ### Changed
-- License metadata now uses a **PEP 639 SPDX expression**
-  (`license = "PolyForm-Noncommercial-1.0.0"` with `license-files = ["LICENSE"]`),
-  replacing the `license = {file = ...}` form that dumped the full licence text into
-  PyPI's *License* field. Produces a clean `License-Expression` tag (Metadata 2.4).
 - Relicensed from Apache-2.0 to **PolyForm Noncommercial 1.0.0**: noncommercial use
   (personal, research, educational) is free; any commercial use requires a separate
   license from the copyright holder.
@@ -35,4 +43,6 @@ All notable changes to this project are documented here. The format follows
   import package remains `dicomforge` and the source repository stays `dicom-forge`; the
   de-identification provenance label is unchanged.
 
-[Unreleased]: https://github.com/DaCameraGirl/dicom-forge/commits/main
+[Unreleased]: https://github.com/DaCameraGirl/dicom-forge/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/DaCameraGirl/dicom-forge/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/DaCameraGirl/dicom-forge/releases/tag/v0.1.0
