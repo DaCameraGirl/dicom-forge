@@ -7,7 +7,10 @@
 # Requires ITK 5 with the GDCM IO module (Debian/Ubuntu: libinsighttoolkit5-dev).
 
 cmake_minimum_required(VERSION 3.16)
-project(dicom-probe LANGUAGES CXX)
+# C is enabled alongside CXX because Ubuntu's ITK pulls in the VTK glue module,
+# whose CMake config runs find_package(MPI COMPONENTS C) -- that requires the C
+# language to be enabled even though dicom-probe itself is pure C++.
+project(dicom-probe LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
