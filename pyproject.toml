@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.25"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
@@ -8,14 +8,14 @@ dynamic = ["version"]
 description = "Enterprise-grade medical-imaging pipeline: ingest, de-identify, convert, and QC DICOM for 3D Slicer and ITK-SNAP."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { file = "LICENSE" }
+license = "PolyForm-Noncommercial-1.0.0"
+license-files = ["LICENSE"]
 authors = [{ name = "Angela Hudson", email = "angela.hudson.data@gmail.com" }]
 keywords = ["dicom", "medical-imaging", "nifti", "nrrd", "3d-slicer", "itk-snap", "deidentification", "radiology"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Healthcare Industry",
   "Intended Audience :: Science/Research",
-  "License :: Free for non-commercial use",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
