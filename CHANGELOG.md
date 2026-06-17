@@ -24,6 +24,10 @@ All notable changes to this project are documented here. The format follows
   Built and exercised end-to-end in CI against a generated synthetic series.
 
 ### Changed
+- License metadata now uses a **PEP 639 SPDX expression**
+  (`license = "PolyForm-Noncommercial-1.0.0"` with `license-files = ["LICENSE"]`),
+  replacing the `license = {file = ...}` form that dumped the full licence text into
+  PyPI's *License* field. Produces a clean `License-Expression` tag (Metadata 2.4).
 - Relicensed from Apache-2.0 to **PolyForm Noncommercial 1.0.0**: noncommercial use
   (personal, research, educational) is free; any commercial use requires a separate
   license from the copyright holder.
