@@ -78,8 +78,10 @@ jobs:
       - name: Install ITK + C++ toolchain
         run: |
           sudo apt-get update
+          # libgdcm-dev provides GDCM's CMake target files; the ITK dev package
+          # is built against system GDCM and its config imports them.
           sudo apt-get install -y --no-install-recommends \
-            cmake g++ libinsighttoolkit5-dev
+            cmake g++ libinsighttoolkit5-dev libgdcm-dev
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"

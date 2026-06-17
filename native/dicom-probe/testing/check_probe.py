@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import math
 import sys
+from pathlib import Path
 
 
 def _approx(actual: float, expected: float, tol: float = 1e-3) -> bool:
@@ -20,7 +21,7 @@ def _approx(actual: float, expected: float, tol: float = 1e-3) -> bool:
 
 
 def main(path: str) -> None:
-    with open(path, encoding="utf-8") as handle:
+    with Path(path).open(encoding="utf-8") as handle:
         report = json.load(handle)
 
     failures: list[str] = []
