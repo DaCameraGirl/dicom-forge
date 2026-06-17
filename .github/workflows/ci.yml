@@ -78,10 +78,12 @@ jobs:
       - name: Install ITK + C++ toolchain
         run: |
           sudo apt-get update
-          # libgdcm-dev provides GDCM's CMake target files; the ITK dev package
-          # is built against system GDCM and its config imports them.
+          # Ubuntu's ITK is built with the VTK glue module enabled, so
+          # find_package(ITK) transitively configures VTK, which calls
+          # find_package(MPI) -- hence mpi-default-dev. libgdcm-dev provides
+          # GDCM's CMake target files (ITK is built against system GDCM).
           sudo apt-get install -y --no-install-recommends \
-            cmake g++ libinsighttoolkit5-dev libgdcm-dev
+            cmake g++ libinsighttoolkit5-dev libgdcm-dev mpi-default-dev
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
