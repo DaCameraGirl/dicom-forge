@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 200" role="img" aria-label="Animated DICOM de-identification — x-ray scan with patient names redacted from paperwork">
+  <defs>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="xrayClip">
+      <rect x="28" y="52" width="120" height="120" rx="10"/>
+    </clipPath>
+    <clipPath id="formClip">
+      <rect x="0" y="0" width="170" height="150"/>
+    </clipPath>
+  </defs>
+
+  <rect x="6" y="6" width="508" height="188" rx="20" fill="url(#panel)" stroke="#334155" stroke-width="2"/>
+
+  <!-- X-ray / CT gantry -->
+  <g transform="translate(20,34)">
+    <rect x="0" y="0" width="136" height="150" rx="12" fill="#0b1220" stroke="#2dd4bf" stroke-width="1.5"/>
+    <path d="M18 18 H118 V34 H18 Z" fill="#1e293b"/>
+    <text x="68" y="29" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="9" fill="#94a3b8">IMAGING STUDY</text>
+    <g clip-path="url(#xrayClip)">
+      <rect x="28" y="52" width="120" height="120" fill="#111827"/>
+      <ellipse cx="88" cy="98" rx="34" ry="42" fill="#1f2937" stroke="#475569" stroke-width="1"/>
+      <ellipse cx="88" cy="98" rx="22" ry="28" fill="#0f172a"/>
+      <rect x="52" y="70" width="72" height="4" fill="#334155" opacity="0.6"/>
+      <rect x="48" y="88" width="80" height="3" fill="#334155" opacity="0.5"/>
+      <rect x="56" y="106" width="64" height="3" fill="#334155" opacity="0.5"/>
+      <rect x="28" y="52" width="120" height="8" fill="url(#beam)" opacity="0.85">
+        <animate attributeName="y" values="52;164;52" dur="2.8s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    <rect x="44" y="176" width="48" height="6" rx="3" fill="#2dd4bf" opacity="0.7">
+      <animate attributeName="opacity" values="0.35;1;0.35" dur="1.6s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- Paperwork with PHI fields -->
+  <g transform="translate(178,34)">
+    <rect x="0" y="0" width="170" height="150" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="14" y="22" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700" fill="#0f172a">DICOM HEADER</text>
+    <line x1="14" y1="28" x2="156" y2="28" stroke="#e2e8f0" stroke-width="1"/>
+
+    <text x="14" y="46" font-family="Consolas, monospace" font-size="9" fill="#64748b">PatientName</text>
+    <text x="14" y="60" font-family="Consolas, monospace" font-size="10" fill="#0f172a">DOE^JANE^M</text>
+    <rect x="12" y="50" width="0" height="12" fill="#0f172a" opacity="0.92">
+      <animate attributeName="width" values="0;148;148;148" keyTimes="0;0.35;0.7;1" dur="3.2s" repeatCount="indefinite"/>
+    </rect>
+
+    <text x="14" y="78" font-family="Consolas, monospace" font-size="9" fill="#64748b">PatientID</text>
+    <text x="14" y="92" font-family="Consolas, monospace" font-size="10" fill="#0f172a">MRN-88421</text>
+    <rect x="12" y="82" width="0" height="12" fill="#0f172a" opacity="0.92">
+      <animate attributeName="width" values="0;0;148;148" keyTimes="0;0.25;0.55;1" dur="3.2s" repeatCount="indefinite"/>
+    </rect>
+
+    <text x="14" y="110" font-family="Consolas, monospace" font-size="9" fill="#64748b">PatientBirthDate</text>
+    <text x="14" y="124" font-family="Consolas, monospace" font-size="10" fill="#0f172a">19820415</text>
+    <rect x="12" y="114" width="0" height="12" fill="#0f172a" opacity="0.92">
+      <animate attributeName="width" values="0;0;0;148" keyTimes="0;0.4;0.65;1" dur="3.2s" repeatCount="indefinite"/>
+    </rect>
+
+    <text x="14" y="142" font-family="Segoe UI, Arial, sans-serif" font-size="8" fill="#ef4444" font-weight="600">
+      <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.6;0.75;1" dur="3.2s" repeatCount="indefinite"/>
+      PHI REMOVED
+    </text>
+  </g>
+
+  <!-- Clean output -->
+  <g transform="translate(364,34)">
+    <rect x="0" y="0" width="136" height="150" rx="12" fill="#0b1220" stroke="#38bdf8" stroke-width="1.5"/>
+    <rect x="24" y="24" width="88" height="64" rx="8" fill="#134e4a" stroke="#2dd4bf" stroke-width="1"/>
+    <text x="68" y="52" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="#ccfbf1">.nrrd</text>
+    <text x="68" y="68" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="9" fill="#99f6e4">QC PASS</text>
+    <circle cx="68" cy="112" r="16" fill="#14532d" stroke="#4ade80" stroke-width="2"/>
+    <path d="M60 112 L66 118 L78 104" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="68" y="142" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="9" fill="#94a3b8">Slicer-ready</text>
+  </g>
+
+  <text x="260" y="192" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b">scan → redact names &amp; IDs → audit → convert</text>
+</svg>
