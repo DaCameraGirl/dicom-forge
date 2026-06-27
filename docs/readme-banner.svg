@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="220" viewBox="0 0 920 220" role="img" aria-label="DICOM Forge">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070b14"/>
+      <stop offset="50%" stop-color="#12102a"/>
+      <stop offset="100%" stop-color="#0d1b33"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4fd6e0"/>
+      <stop offset="100%" stop-color="#58a6ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="920" height="220" rx="18" fill="url(#bg)"/>
+  <rect x="1" y="1" width="918" height="218" rx="17" fill="none" stroke="rgba(188,140,255,0.28)" stroke-width="2"/>
+  <circle cx="96" cy="110" r="52" fill="rgba(188,140,255,0.08)" stroke="rgba(188,140,255,0.35)" stroke-width="2"/>
+  <rect x="72" y="86" width="48" height="36" rx="10" fill="none" stroke="url(#accent)" stroke-width="3"/>
+  <circle cx="84" cy="102" r="4" fill="#58a6ff"/>
+  <circle cx="96" cy="102" r="4" fill="#58a6ff"/>
+  <circle cx="108" cy="102" r="4" fill="#58a6ff"/>
+  <path d="M78 118 Q96 128 114 118" fill="none" stroke="#4fd6e0" stroke-width="2" stroke-linecap="round"/>
+  <text x="170" y="92" fill="#f8fbff" font-family="Segoe UI, system-ui, sans-serif" font-size="38" font-weight="800">DICOM Forge</text>
+  <text x="170" y="126" fill="#9db4d1" font-family="Segoe UI, system-ui, sans-serif" font-size="17" font-weight="500">Enterprise medical-imaging pipeline: ingest, de-identify, QC, and convert DICOM for 3D Slicer and ITK-SNAP.</text>
+  <rect x="170" y="148" width="88" height="28" rx="14" fill="rgba(188,140,255,0.14)" stroke="#4fd6e066" stroke-width="1"/><text x="214" y="167" fill="#4fd6e0" font-family="Segoe UI, system-ui, sans-serif" font-size="12" font-weight="700" text-anchor="middle">DICOM</text>
+  <rect x="270" y="148" width="112" height="28" rx="14" fill="rgba(188,140,255,0.14)" stroke="#58a6ff66" stroke-width="1"/><text x="326" y="167" fill="#58a6ff" font-family="Segoe UI, system-ui, sans-serif" font-size="12" font-weight="700" text-anchor="middle">DE-IDENTIFY</text>
+</svg>
