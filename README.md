@@ -70,13 +70,13 @@ It is the headless core of a two-repo system; its companion, [`slicer-forge`](ht
 ---
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Why%20this%20exists&fontSize=22&fontColor=e6edf3" width="720" alt="Why this exists" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Why%20this%20exists&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Why this exists" /></p>
 
 
 Real imaging pipelines separate a **testable, headless core** from a **thin GUI**. 3D Slicer itself is built this way: ITK/VTK do the work, the GUI is a shell on top. `dicom-forge` is that core — so the logic is unit-tested in CI **without** needing Slicer installed, and the same code runs from the command line, from Python, or inside Slicer's Python console.
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Features&fontSize=22&fontColor=e6edf3" width="720" alt="Features" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Features&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Features" /></p>
 
 
 - **Ingestion** — recursive DICOM discovery, series grouping, geometry-aware slice ordering (handles oblique acquisitions), rescale-slope/intercept applied (CT in HU).
@@ -89,7 +89,7 @@ Real imaging pipelines separate a **testable, headless core** from a **thin GUI*
 - **Native ITK pre-flight** — a companion C++/ITK CLI, [`dicom-probe`](native/dicom-probe/), reads a series through ITK's own GDCM path (the engine under Slicer/ITK-SNAP) and reports the true volume geometry as JSON.
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Installation&fontSize=22&fontColor=e6edf3" width="720" alt="Installation" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Installation&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Installation" /></p>
 
 
 ```bash
@@ -102,7 +102,7 @@ pip install "dicom-anvil[convert]" # + SimpleITK/pynrrd/nibabel for conversion
 > The conversion stack (SimpleITK et al.) is an **optional extra** so the core stays lightweight and CI-friendly. Calling a conversion function without it raises a clear `MissingDependencyError` telling you exactly what to install.
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Quick%20start&fontSize=22&fontColor=e6edf3" width="720" alt="Quick start" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Quick%20start&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Quick start" /></p>
 
 
 ### Command line
@@ -134,7 +134,7 @@ print(result.model_dump_json(indent=2)) # full audit record
 ```
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Pipeline%20order%20(and%20why%20it%20matters)&fontSize=22&fontColor=e6edf3" width="720" alt="Pipeline order (and why it matters)" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Pipeline%20order%20(and%20why%20it%20matters)&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Pipeline order (and why it matters)" /></p>
 
 
 ```
@@ -146,7 +146,7 @@ De-identification runs **before** conversion, so any file written to disk is alr
 > ⚠️ **De-identification is risk reduction, not a legal guarantee.** Burned-in pixel annotations and private vendor tags can still carry PHI. Always review output before releasing it outside a controlled environment.
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Development&fontSize=22&fontColor=e6edf3" width="720" alt="Development" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Development&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Development" /></p>
 
 
 ```bash
@@ -157,7 +157,7 @@ ruff check . && mypy        # lint + type-check
 ```
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=License&fontSize=22&fontColor=e6edf3" width="720" alt="License" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=License&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="License" /></p>
 
 
 [PolyForm Noncommercial License 1.0.0](LICENSE) © Angela Hudson
