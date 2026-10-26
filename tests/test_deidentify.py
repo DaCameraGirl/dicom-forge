@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import secrets
+
 import pytest
 from pydicom.dataset import Dataset
 
@@ -40,7 +42,7 @@ def test_moderate_blanks_dates_and_devices(single_dataset: Dataset) -> None:
 
 def test_patient_id_pseudonymised(single_dataset: Dataset) -> None:
     original = single_dataset.PatientID
-    result = deidentify_dataset(single_dataset, salt="proj")
+    result = deidentify_dataset(single_dataset, salt=secrets.token_hex(32))
     assert single_dataset.PatientID != original
     assert single_dataset.PatientID == result.pseudonymised_patient_id
     assert single_dataset.PatientID.startswith("DF-")
@@ -53,7 +55,8 @@ def test_patient_id_can_be_kept(single_dataset: Dataset) -> None:
 
 def test_provenance_markers_set(single_dataset: Dataset) -> None:
     deidentify_dataset(single_dataset, level=DeidentificationLevel.BASIC)
-    assert single_dataset.PatientIdentityRemoved == "YES"
+    # Pixel data is never verified, so the attribute (which covers pixels) is "NO".
+    assert single_dataset.PatientIdentityRemoved == "NO"
     assert "dicom-forge basic" in single_dataset.DeidentificationMethod
 
 

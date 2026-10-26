@@ -7,9 +7,22 @@ carries a human-readable message; subclasses add structured context where useful
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # models imports nothing from here, but keep the runtime import-free
+    from .models import PixelPrivacyReport
+
 
 class DicomForgeError(Exception):
     """Base class for all errors raised by dicom-forge."""
+
+
+class ConfigurationError(DicomForgeError, ValueError):
+    """Raised for an invalid setting, e.g. an unsafe pseudonymisation secret.
+
+    Also a ``ValueError``, so existing ``except ValueError`` handlers and pydantic
+    validators keep working.
+    """
 
 
 class IngestionError(DicomForgeError):
@@ -22,6 +35,20 @@ class EmptySeriesError(IngestionError):
 
 class DeidentificationError(DicomForgeError):
     """Raised when de-identification cannot satisfy the requested profile."""
+
+
+class BurnedInAnnotationError(DeidentificationError):
+    """Raised when a series is known or suspected to carry burned-in pixel annotation.
+
+    Pixel data is never de-identified, so such series are rejected before anything is
+    written unless the caller explicitly opts in. The message carries only reason codes
+    and counts, never paths, UIDs or attribute values. ``report`` holds the structured
+    :class:`~dicomforge.models.PixelPrivacyReport` for callers that need the reasons.
+    """
+
+    def __init__(self, message: str, report: PixelPrivacyReport | None = None) -> None:
+        super().__init__(message)
+        self.report = report
 
 
 class ConversionError(DicomForgeError):

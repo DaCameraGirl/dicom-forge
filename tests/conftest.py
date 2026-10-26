@@ -8,6 +8,7 @@ exercised end-to-end without external fixtures.
 
 from __future__ import annotations
 
+import importlib.util
 from pathlib import Path
 
 import numpy as np
@@ -16,7 +17,20 @@ import pytest
 from pydicom.dataset import Dataset, FileMetaDataset
 from pydicom.uid import CTImageStorage, ExplicitVRLittleEndian, generate_uid
 
+from _dicomio import save_dicom
+
 ROWS, COLS = 16, 16
+_HAS_SIMPLEITK = importlib.util.find_spec("SimpleITK") is not None
+
+
+def pytest_runtest_setup(item: pytest.Item) -> None:
+    """Skip ``requires_convert`` tests when the conversion extra is not installed.
+
+    CI's core-only job deselects them with ``-m "not requires_convert"``; this keeps a
+    plain ``pytest`` run without the extra from failing on them instead.
+    """
+    if item.get_closest_marker("requires_convert") and not _HAS_SIMPLEITK:
+        pytest.skip("needs the 'convert' extra (SimpleITK)")
 
 
 def _make_slice(
@@ -91,7 +105,7 @@ def synthetic_series(tmp_path: Path) -> Path:
     series_dir.mkdir()
     for i in range(6):
         ds = _make_slice(study_uid=study_uid, series_uid=series_uid, index=i, z=i * 1.0)
-        ds.save_as(series_dir / f"slice_{i:03d}.dcm", enforce_file_format=True)
+        save_dicom(ds, series_dir / f"slice_{i:03d}.dcm")
     return series_dir
 
 
@@ -103,13 +117,11 @@ def two_series(tmp_path: Path) -> Path:
     root = tmp_path / "study"
     root.mkdir()
     for i in range(6):
-        _make_slice(study_uid=study_uid, series_uid=big, index=i, z=i * 1.0).save_as(
-            root / f"big_{i:03d}.dcm", enforce_file_format=True
-        )
+        ds = _make_slice(study_uid=study_uid, series_uid=big, index=i, z=i * 1.0)
+        save_dicom(ds, root / f"big_{i:03d}.dcm")
     for i in range(3):
-        _make_slice(study_uid=study_uid, series_uid=small, index=i, z=i * 1.0).save_as(
-            root / f"small_{i:03d}.dcm", enforce_file_format=True
-        )
+        ds = _make_slice(study_uid=study_uid, series_uid=small, index=i, z=i * 1.0)
+        save_dicom(ds, root / f"small_{i:03d}.dcm")
     return root
 
 
