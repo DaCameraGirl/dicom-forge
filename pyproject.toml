@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "dicom-anvil"
 dynamic = ["version"]
-description = "Enterprise-grade medical-imaging pipeline: ingest, de-identify, convert, and QC DICOM for 3D Slicer and ITK-SNAP."
+description = "Research medical-imaging pipeline: ingest, header de-identification, QC, and conversion of DICOM for 3D Slicer and ITK-SNAP. Not a validated anonymization tool."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "PolyForm-Noncommercial-1.0.0"
@@ -14,7 +14,7 @@ authors = [{ name = "Angela Hudson", email = "angela.hudson.data@gmail.com" }]
 keywords = ["dicom", "medical-imaging", "nifti", "nrrd", "3d-slicer", "itk-snap", "deidentification", "radiology"]
 classifiers = [
   "Development Status :: 4 - Beta",
-  "Intended Audience :: Healthcare Industry",
+  # No "Healthcare Industry" audience: it would imply validated clinical use.
   "Intended Audience :: Science/Research",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -82,6 +82,8 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["B011"]
+# Translation strings: long lines are prose, and full-width CJK punctuation is correct.
+"scripts/gen-readme-i18n.py" = ["E501", "RUF001"]
 
 [tool.mypy]
 python_version = "3.10"
