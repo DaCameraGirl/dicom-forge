@@ -19,6 +19,8 @@
     <a href="README.ar.md"><img src="https://img.shields.io/badge/🇸🇦_العربية-2dd4bf?style=for-the-badge" alt="العربية"/></a>
 </p>
 
+> **Translation note:** this translation has not been reviewed by a native speaker. The [English README](README.md) is authoritative, especially for the privacy limitations.
+
 <p align="center">
   <img src="docs/assets/deid-scanner.svg" alt="إزالة هوية DICOM متحركة — أشعة سينية وأسماء محذوفة من الأوراق" width="520"/>
 </p>
@@ -30,7 +32,7 @@
   <img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange.svg" alt="License"/>
 </p>
 
-**خط أنابيب تصوير طبي على مستوى المؤسسات لـ [3D Slicer](https://www.slicer.org/) و [ITK-SNAP](http://www.itksnap.org/).**
+**خط أنابيب تصوير طبي بحثي لـ [3D Slicer](https://www.slicer.org/) و [ITK-SNAP](http://www.itksnap.org/).**
 
 يأخذ `dicom-forge` مجلد DICOM و**يزيل الهوية** (أسماء ومعرّفات المريض من الرؤوس) ويجري **مراقبة الجودة** و**يحوّل** إلى NIfTI وNRRD و`.seg.nrrd`.
 
@@ -70,8 +72,11 @@ dicomforge inspect ./study
 # Run QC and print a report
 dicomforge qc ./study
 
-# Full pipeline: de-identify -> QC -> convert to Slicer NRRD
-dicomforge convert ./study ./out/patient01 --format nrrd --deid-level moderate
+# A private per-project secret keeps pseudonyms stable across runs (never commit it)
+export DICOMFORGE_PSEUDONYM_SECRET="<from your secrets manager>"
+
+# Full pipeline: burned-in check -> de-identify -> QC -> convert to Slicer NRRD
+dicomforge convert ./study ./out/case01 --format nrrd --deid-level moderate
 ```
 
 ### بايثون
@@ -81,23 +86,24 @@ from dicomforge import run_pipeline, PipelineConfig, OutputFormat
 
 result = run_pipeline(
     "./study",
-    "./out/patient01",
+    "./out/case01",
     config=PipelineConfig(output_format=OutputFormat.NRRD),
 )
-print(result.qc.passed)                 # True / False
-print(result.conversion.output_path)    # ./out/patient01.nrrd
-print(result.model_dump_json(indent=2)) # full audit record
+print(result.qc.passed)  # True / False
+print(result.pixel_privacy.status)  # "unverified" (never "clean"): pixels are not analysed
+print(result.conversion.output_path)  # ./out/case01.nrrd
+print(result.model_dump_json(indent=2))  # full audit record
 ```
 
 ## ترتيب الخط أنابيب
 
 ```
-ingest ──> de-identify ──> QC ──> convert
+ingest ──> burned-in check ──> de-identify ──> QC ──> convert
 ```
 
 إزالة الهوية **قبل** التحويل، **في الذاكرة**.
 
-> ⚠️ **تقليل مخاطر وليس ضماناً قانونياً.**
+> ⚠️ **ليست أداة مُتحقَّقاً منها لإخفاء الهوية.** تُزال الهوية من ترويسات DICOM فقط، ولا تُحلَّل بيانات البكسل أبداً. تُرفض السلاسل التي تشير بياناتها الوصفية إلى نص مطبوع داخل الصورة، لكن أي نص مطبوع آخر لا يُكتشف. لا يوجد تحقق تنظيمي أو سريري. راجع [سياسة إزالة الهوية](docs/deidentification-policy.md) (بالإنجليزية) وراجع المخرجات قبل مشاركتها.
 
 ## التطوير
 

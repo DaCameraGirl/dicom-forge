@@ -12,6 +12,8 @@
 
 ::: dicomforge.deidentify_dataset
 
+::: dicomforge.assess_burned_in_risk
+
 ::: dicomforge.run_qc
 
 ::: dicomforge.convert_series
@@ -25,5 +27,7 @@
 ::: dicomforge.QCReport
 
 ::: dicomforge.DeidentificationResult
+
+::: dicomforge.PixelPrivacyReport
 
 ::: dicomforge.ConversionResult

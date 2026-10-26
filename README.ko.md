@@ -19,6 +19,8 @@
     <a href="README.ar.md"><img src="https://img.shields.io/badge/🇸🇦_العربية-1e293b?style=for-the-badge" alt="العربية"/></a>
 </p>
 
+> **Translation note:** this translation has not been reviewed by a native speaker. The [English README](README.md) is authoritative, especially for the privacy limitations.
+
 <p align="center">
   <img src="docs/assets/deid-scanner.svg" alt="DICOM 비식별 애니메이션 — X선과 서류 이름 삭제" width="520"/>
 </p>
@@ -30,7 +32,7 @@
   <img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange.svg" alt="License"/>
 </p>
 
-**[3D Slicer](https://www.slicer.org/) 및 [ITK-SNAP](http://www.itksnap.org/)용 엔터프라이즈 DICOM 파이프라인.**
+**[3D Slicer](https://www.slicer.org/) 및 [ITK-SNAP](http://www.itksnap.org/)용 연구용 DICOM 파이프라인.**
 
 `dicom-forge`는 DICOM 폴더를 **비식별화**(환자 이름·ID 제거)하고 **QC** 후 NIfTI/NRRD/`.seg.nrrd`로 **변환**합니다.
 
@@ -70,8 +72,11 @@ dicomforge inspect ./study
 # Run QC and print a report
 dicomforge qc ./study
 
-# Full pipeline: de-identify -> QC -> convert to Slicer NRRD
-dicomforge convert ./study ./out/patient01 --format nrrd --deid-level moderate
+# A private per-project secret keeps pseudonyms stable across runs (never commit it)
+export DICOMFORGE_PSEUDONYM_SECRET="<from your secrets manager>"
+
+# Full pipeline: burned-in check -> de-identify -> QC -> convert to Slicer NRRD
+dicomforge convert ./study ./out/case01 --format nrrd --deid-level moderate
 ```
 
 ### Python
@@ -81,23 +86,24 @@ from dicomforge import run_pipeline, PipelineConfig, OutputFormat
 
 result = run_pipeline(
     "./study",
-    "./out/patient01",
+    "./out/case01",
     config=PipelineConfig(output_format=OutputFormat.NRRD),
 )
-print(result.qc.passed)                 # True / False
-print(result.conversion.output_path)    # ./out/patient01.nrrd
-print(result.model_dump_json(indent=2)) # full audit record
+print(result.qc.passed)  # True / False
+print(result.pixel_privacy.status)  # "unverified" (never "clean"): pixels are not analysed
+print(result.conversion.output_path)  # ./out/case01.nrrd
+print(result.model_dump_json(indent=2))  # full audit record
 ```
 
 ## 파이프라인 순서
 
 ```
-ingest ──> de-identify ──> QC ──> convert
+ingest ──> burned-in check ──> de-identify ──> QC ──> convert
 ```
 
 비식별은 변환 **전**, **메모리** 처리.
 
-> ⚠️ **위험 감소이지 법적 보장이 아닙니다.**
+> ⚠️ **검증된 익명화 도구가 아닙니다.** DICOM 헤더만 비식별 처리하며 픽셀 데이터는 분석하지 않습니다. 메타데이터에 이미지 내 문자(burned-in)가 표시된 시리즈는 거부되지만, 그 밖의 이미지 내 문자는 감지되지 않습니다. 규제 및 임상 검증을 거치지 않았습니다. [비식별 정책](docs/deidentification-policy.md)(영문)을 확인하고 공유 전에 결과를 검토하세요.
 
 ## 개발
 

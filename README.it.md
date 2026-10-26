@@ -19,6 +19,8 @@
     <a href="README.ar.md"><img src="https://img.shields.io/badge/🇸🇦_العربية-1e293b?style=for-the-badge" alt="العربية"/></a>
 </p>
 
+> **Translation note:** this translation has not been reviewed by a native speaker. The [English README](README.md) is authoritative, especially for the privacy limitations.
+
 <p align="center">
   <img src="docs/assets/deid-scanner.svg" alt="De-identificazione DICOM animata — radiografia e nomi oscurati" width="520"/>
 </p>
@@ -70,8 +72,11 @@ dicomforge inspect ./study
 # Run QC and print a report
 dicomforge qc ./study
 
-# Full pipeline: de-identify -> QC -> convert to Slicer NRRD
-dicomforge convert ./study ./out/patient01 --format nrrd --deid-level moderate
+# A private per-project secret keeps pseudonyms stable across runs (never commit it)
+export DICOMFORGE_PSEUDONYM_SECRET="<from your secrets manager>"
+
+# Full pipeline: burned-in check -> de-identify -> QC -> convert to Slicer NRRD
+dicomforge convert ./study ./out/case01 --format nrrd --deid-level moderate
 ```
 
 ### Python
@@ -81,23 +86,24 @@ from dicomforge import run_pipeline, PipelineConfig, OutputFormat
 
 result = run_pipeline(
     "./study",
-    "./out/patient01",
+    "./out/case01",
     config=PipelineConfig(output_format=OutputFormat.NRRD),
 )
-print(result.qc.passed)                 # True / False
-print(result.conversion.output_path)    # ./out/patient01.nrrd
-print(result.model_dump_json(indent=2)) # full audit record
+print(result.qc.passed)  # True / False
+print(result.pixel_privacy.status)  # "unverified" (never "clean"): pixels are not analysed
+print(result.conversion.output_path)  # ./out/case01.nrrd
+print(result.model_dump_json(indent=2))  # full audit record
 ```
 
 ## Ordine pipeline
 
 ```
-ingest ──> de-identify ──> QC ──> convert
+ingest ──> burned-in check ──> de-identify ──> QC ──> convert
 ```
 
 De-id **prima** della conversione, **in memoria**.
 
-> ⚠️ **Riduzione del rischio, non garanzia legale.**
+> ⚠️ **Non è uno strumento di anonimizzazione validato.** Solo le intestazioni DICOM vengono de-identificate; i pixel non vengono mai analizzati. Le serie i cui metadati segnalano testo impresso vengono rifiutate, ma altro testo impresso non viene rilevato. Nessuna validazione regolatoria o clinica. Consultare la [policy di de-identificazione](docs/deidentification-policy.md) (in inglese) e verificare l'output prima di condividerlo.
 
 ## Sviluppo
 

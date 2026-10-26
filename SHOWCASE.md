@@ -1,8 +1,13 @@
 # DICOM Forge — project showcase
 
-> Turning messy, identifiable clinical scans into clean, de-identified,
-> quality-checked 3D images that research software can actually use — from the
-> command line **or** with one click inside 3D Slicer.
+> Turning messy clinical DICOM into header-de-identified, quality-checked 3D
+> images that research software can actually use — from the command line **or**
+> with one click inside 3D Slicer.
+>
+> **A research tool, not a validated anonymization solution.** Only DICOM headers
+> are de-identified, and pixel data is never analysed. See the
+> [de-identification policy](docs/deidentification-policy.md) for exact guarantees
+> and limitations.
 
 [![CI](https://github.com/DaCameraGirl/dicom-forge/actions/workflows/ci.yml/badge.svg)](https://github.com/DaCameraGirl/dicom-forge/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/dicom-anvil.svg)](https://pypi.org/project/dicom-anvil/)
@@ -39,7 +44,7 @@ repeatable, and with an audit trail.
         ║   dicom-forge  ·  the headless engine  (Python)          ║
         ║                                                          ║
         ║   ingest  →  de-identify  →  quality-control  →  convert ║
-        ║   (build    (remove PHI,    (missing slices,   (NIfTI /  ║
+        ║   (build    (header PHI,    (missing slices,   (NIfTI /  ║
         ║    volumes)  3 levels)       bad geometry)      NRRD)    ║
         ║                                                          ║
         ║   …plus a serialisable audit record for every run.       ║
@@ -60,7 +65,7 @@ The brain of the system, published on PyPI as
 | Stage | What it does |
 |---|---|
 | **Ingest** | Discovers scattered slices, groups them into series, orders them by real-world geometry (handles oblique acquisitions), applies CT rescale to Hounsfield units. |
-| **De-identify** | Removes protected health information at three escalating levels, with deterministic salted-hash pseudonymisation of patient IDs. |
+| **De-identify** | Rejects series whose metadata signals burned-in pixel text, then de-identifies DICOM headers at three documented levels. It works recursively: removes names, IDs and private tags, replaces UIDs consistently, and uses keyed pseudonyms under a private project secret. Pixel data is never modified. |
 | **Quality control** | Flags missing slices, irregular spacing, inconsistent geometry, and reports intensity statistics — *before* you rely on the scan. |
 | **Convert** | Geometry-preserving export to NIfTI / NRRD (and Slicer-native segmentations). |
 
@@ -68,7 +73,7 @@ Usable as a **command-line tool** or a **typed Python library**.
 
 ### `slicer-forge` — the one-click front-end
 A [3D Slicer](https://www.slicer.org) extension that puts the whole engine behind
-a single **"DICOM Forge Batch"** button: pick a folder, click go, and cleaned-up
+a single **"DICOM Forge Batch"** button: pick a folder, click go, and converted
 volumes load straight into the viewer — batch, cancellable, with progress. No
 command line required.
 
@@ -82,13 +87,14 @@ quick "will this load correctly, and as what?" check.
 ## Who it's for
 
 - **Imaging-research labs & universities** — the core user: turn piles of
-  incoming clinical DICOM into shareable, de-identified, analysis-ready volumes,
-  in batch, with documentation.
+  incoming DICOM into header-de-identified, analysis-ready volumes, in batch,
+  with documentation, inside a controlled environment.
 - **Radiologists & clinician-researchers** — who work in 3D Slicer and want a
   one-click import instead of wrestling the command line.
-- **Clinical trials & multi-site studies** — where consistent de-identification
-  and a documented, repeatable process are compliance requirements, not niceties.
-- **AI / ML medical-imaging teams** — who need large batches cleaned and
+- **Multi-site research** — where a consistent, documented, repeatable process
+  matters. Regulatory compliance still needs independent review: the tool is not
+  validated for releasing data outside a controlled environment.
+- **AI / ML medical-imaging teams** — who need large batches quality-checked and
   converted to NIfTI/NRRD to feed training pipelines.
 - **Commercial imaging products** — which can license the engine (see below).
 
@@ -111,8 +117,8 @@ What makes this more than a script:
 - **Typed and validated end-to-end.** Pydantic models throughout, `py.typed`,
   strict `mypy`, `ruff` lint/format — enforced in CI across Python 3.10–3.12.
 - **Reproducible & published.** Live on PyPI via OIDC **Trusted Publishing** (no
-  stored secrets); a **mkdocs** documentation site; branch protection requiring
-  green CI on both repos.
+  stored secrets); a **mkdocs** documentation site; branch protection with
+  required CI checks on both repos (repository admins can bypass it).
 - **Synthetic test data, never real patients.** Every test builds deterministic
   synthetic DICOM, so the whole suite runs anywhere with no PHI.
 

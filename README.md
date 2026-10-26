@@ -30,9 +30,9 @@
   <img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange.svg" alt="License"/>
 </p>
 
-**An enterprise-grade medical-imaging pipeline that prepares DICOM for [3D Slicer](https://www.slicer.org/) and [ITK-SNAP](http://www.itksnap.org/).**
+**A medical-imaging research pipeline that prepares DICOM for [3D Slicer](https://www.slicer.org/) and [ITK-SNAP](http://www.itksnap.org/).**
 
-`dicom-forge` takes a folder of DICOM, **de-identifies** it (strips patient names and IDs from headers), runs **quality control**, and **converts** it into formats clinical-research viewers load natively — NIfTI (`.nii.gz`), NRRD (`.nrrd`), and Slicer's segmentation format (`.seg.nrrd`). Every run produces a serialisable audit record.
+`dicom-forge` takes a folder of DICOM, refuses series whose metadata signals burned-in pixel text, **de-identifies the headers** (names, IDs, private tags, UIDs), runs **quality control**, and **converts** it into formats clinical-research viewers load natively — NIfTI (`.nii.gz`), NRRD (`.nrrd`), and Slicer's segmentation format (`.seg.nrrd`). Every run produces a serialisable audit record.
 
 It is the headless core of a two-repo system; its companion, [`slicer-forge`](https://github.com/DaCameraGirl/slicer-forge), wraps it in a 3D Slicer extension GUI.
 
@@ -47,7 +47,7 @@ Real imaging pipelines separate a **testable, headless core** from a **thin GUI*
 ## Features
 
 - **Ingestion** — recursive DICOM discovery, series grouping, geometry-aware slice ordering (handles oblique acquisitions), rescale-slope/intercept applied (CT in HU).
-- **De-identification** — three escalating levels modelled on the DICOM PS3.15 Basic Profile, with deterministic salted-hash pseudonymisation of `PatientID`.
+- **Header de-identification** — three levels aligned with a [documented subset](https://github.com/DaCameraGirl/dicom-forge/blob/main/docs/deidentification-policy.md) of the DICOM PS3.15 Basic Profile, applied recursively. It removes names, IDs and private tags, replaces UIDs consistently, and screens free text. `PatientID` and UIDs use keyed HMAC pseudonyms under a private project secret. Series whose metadata signals burned-in pixel text are rejected by default.
 - **Quality control** — slice count, geometry consistency, slice-spacing regularity, and intensity statistics, split into blocking errors vs. non-blocking warnings.
 - **Conversion** — geometry-preserving export to NIfTI / NRRD via SimpleITK (the ITK core shared with Slicer & ITK-SNAP).
 - **Segmentation** — write Slicer-native `.seg.nrrd` label maps with named, coloured segments.
@@ -77,8 +77,11 @@ dicomforge inspect ./study
 # Run QC and print a report
 dicomforge qc ./study
 
-# Full pipeline: de-identify -> QC -> convert to Slicer NRRD
-dicomforge convert ./study ./out/patient01 --format nrrd --deid-level moderate
+# A private per-project secret keeps pseudonyms stable across runs (never commit it)
+export DICOMFORGE_PSEUDONYM_SECRET="<from your secrets manager>"
+
+# Full pipeline: burned-in check -> de-identify -> QC -> convert to Slicer NRRD
+dicomforge convert ./study ./out/case01 --format nrrd --deid-level moderate
 ```
 
 ### Python
@@ -88,23 +91,24 @@ from dicomforge import run_pipeline, PipelineConfig, OutputFormat
 
 result = run_pipeline(
     "./study",
-    "./out/patient01",
+    "./out/case01",
     config=PipelineConfig(output_format=OutputFormat.NRRD),
 )
-print(result.qc.passed)                 # True / False
-print(result.conversion.output_path)    # ./out/patient01.nrrd
-print(result.model_dump_json(indent=2)) # full audit record
+print(result.qc.passed)  # True / False
+print(result.pixel_privacy.status)  # "unverified" (never "clean"): pixels are not analysed
+print(result.conversion.output_path)  # ./out/case01.nrrd
+print(result.model_dump_json(indent=2))  # full audit record
 ```
 
 ## Pipeline order (and why it matters)
 
 ```
-ingest ──> de-identify ──> QC ──> convert
+ingest ──> burned-in check ──> de-identify ──> QC ──> convert
 ```
 
-De-identification runs **before** conversion, so any file written to disk is already free of direct identifiers. De-id is performed **in memory** — your source DICOM is never modified.
+Series flagged for burned-in pixel annotation are rejected before anything is written. Header de-identification runs **in memory** before conversion — your source DICOM is never modified. NRRD/NIfTI outputs carry no DICOM header fields, but their voxels are the source pixels, unchanged.
 
-> ⚠️ **De-identification is risk reduction, not a legal guarantee.** Burned-in pixel annotations and private vendor tags can still carry PHI. Always review output before releasing it outside a controlled environment.
+> ⚠️ **Not a validated anonymization tool.** De-identification is header-only risk reduction. There is no HIPAA, GDPR or other regulatory claim, and no clinical validation. Pixel data is never analysed: burned-in text is caught only when metadata signals it. Free-text screening finds only the record's own identifiers, and some quasi-identifiers (age, sex; dates at `basic`) are kept by design. Read the [de-identification policy](https://github.com/DaCameraGirl/dicom-forge/blob/main/docs/deidentification-policy.md) and review output before it leaves a controlled environment.
 
 ## Development
 

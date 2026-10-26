@@ -19,6 +19,8 @@
     <a href="README.ar.md"><img src="https://img.shields.io/badge/🇸🇦_العربية-1e293b?style=for-the-badge" alt="العربية"/></a>
 </p>
 
+> **Translation note:** this translation has not been reviewed by a native speaker. The [English README](README.md) is authoritative, especially for the privacy limitations.
+
 <p align="center">
   <img src="docs/assets/deid-scanner.svg" alt="Dé-identification DICOM animée — scanner et noms patient barrés sur le dossier" width="520"/>
 </p>
@@ -30,7 +32,7 @@
   <img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange.svg" alt="License"/>
 </p>
 
-**Pipeline d'imagerie médicale prêt pour la production, préparant le DICOM pour [3D Slicer](https://www.slicer.org/) et [ITK-SNAP](http://www.itksnap.org/).**
+**Pipeline d'imagerie médicale pour la recherche, préparant le DICOM pour [3D Slicer](https://www.slicer.org/) et [ITK-SNAP](http://www.itksnap.org/).**
 
 `dicom-forge` prend un dossier DICOM, le **dé-identifie** (retire noms et identifiants patient des en-têtes), exécute un **contrôle qualité** et **convertit** vers NIfTI (`.nii.gz`), NRRD (`.nrrd`) et segmentation Slicer (`.seg.nrrd`). Chaque exécution produit un journal d'audit sérialisable.
 
@@ -77,8 +79,11 @@ dicomforge inspect ./study
 # Run QC and print a report
 dicomforge qc ./study
 
-# Full pipeline: de-identify -> QC -> convert to Slicer NRRD
-dicomforge convert ./study ./out/patient01 --format nrrd --deid-level moderate
+# A private per-project secret keeps pseudonyms stable across runs (never commit it)
+export DICOMFORGE_PSEUDONYM_SECRET="<from your secrets manager>"
+
+# Full pipeline: burned-in check -> de-identify -> QC -> convert to Slicer NRRD
+dicomforge convert ./study ./out/case01 --format nrrd --deid-level moderate
 ```
 
 ### Python
@@ -88,23 +93,24 @@ from dicomforge import run_pipeline, PipelineConfig, OutputFormat
 
 result = run_pipeline(
     "./study",
-    "./out/patient01",
+    "./out/case01",
     config=PipelineConfig(output_format=OutputFormat.NRRD),
 )
-print(result.qc.passed)                 # True / False
-print(result.conversion.output_path)    # ./out/patient01.nrrd
-print(result.model_dump_json(indent=2)) # full audit record
+print(result.qc.passed)  # True / False
+print(result.pixel_privacy.status)  # "unverified" (never "clean"): pixels are not analysed
+print(result.conversion.output_path)  # ./out/case01.nrrd
+print(result.model_dump_json(indent=2))  # full audit record
 ```
 
 ## Ordre du pipeline
 
 ```
-ingest ──> de-identify ──> QC ──> convert
+ingest ──> burned-in check ──> de-identify ──> QC ──> convert
 ```
 
 La dé-identification précède la conversion ; traitement **en mémoire** — la source n'est jamais modifiée.
 
-> ⚠️ **Réduction de risque, pas garantie juridique.** Vérifiez toujours la sortie avant diffusion.
+> ⚠️ **Pas un outil d'anonymisation validé.** Seuls les en-têtes DICOM sont dé-identifiés ; les pixels ne sont jamais analysés. Les séries dont les métadonnées signalent du texte incrusté sont rejetées, mais tout autre texte incrusté n'est pas détecté. Aucune validation réglementaire ni clinique. Voir la [politique de dé-identification](docs/deidentification-policy.md) (en anglais) et vérifiez la sortie avant diffusion.
 
 ## Développement
 

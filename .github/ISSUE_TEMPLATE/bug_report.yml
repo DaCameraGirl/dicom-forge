@@ -25,7 +25,7 @@ body:
     id: version
     attributes:
       label: dicom-forge version
-      placeholder: "0.1.0 (output of `dicomforge --version`)"
+      placeholder: "0.2.0 (output of `dicomforge --version`)"
     validations:
       required: true
   - type: input
