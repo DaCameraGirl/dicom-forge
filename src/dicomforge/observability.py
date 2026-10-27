@@ -12,6 +12,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
+from rich.console import Console
 from rich.logging import RichHandler
 
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -33,7 +34,10 @@ def configure_logging(level: LogLevel = "INFO", *, rich: bool = True) -> None:
 
     handler: logging.Handler
     if rich:
-        handler = RichHandler(rich_tracebacks=True, show_path=False, markup=False)
+        # Logs go to stderr so stdout stays machine-readable (e.g. `--json`, `convert`).
+        handler = RichHandler(
+            console=Console(stderr=True), rich_tracebacks=True, show_path=False, markup=False
+        )
         handler.setFormatter(logging.Formatter("%(message)s", datefmt="[%X]"))
     else:
         handler = logging.StreamHandler()

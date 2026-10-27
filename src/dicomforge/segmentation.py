@@ -109,7 +109,7 @@ def write_labelmap(
     # pynrrd expects index order matching header dimension; transpose z,y,x -> x,y,z.
     nrrd.write(str(out_path), labelmap.transpose(2, 1, 0), header)
 
-    logger.info("Wrote segmentation with %d segment(s) -> %s", len(labels), out_path)
+    logger.info("Wrote segmentation with %d segment(s)", len(labels))
     return ConversionResult(
         output_path=str(out_path),
         output_format=OutputFormat.SEG_NRRD,

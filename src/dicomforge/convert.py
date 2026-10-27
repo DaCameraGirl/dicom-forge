@@ -8,6 +8,7 @@ to the output so volumes load into Slicer/ITK-SNAP in correct anatomical space.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -119,14 +120,21 @@ def convert_series(
     output: str | Path,
     *,
     output_format: OutputFormat = OutputFormat.NRRD,
+    metadata: Mapping[str, str] | None = None,
 ) -> ConversionResult:
     """Convert ``series`` to ``output`` in the requested format.
+
+    ``metadata`` is written into the image header as key/value pairs where the format
+    supports it (NRRD ``key:=value`` fields; NIfTI has no place for them). The
+    pipeline uses it to record what was, and was not, de-identified.
 
     Returns a :class:`ConversionResult` recording the written path, shape, and
     spacing. Raises :class:`ConversionError` if SimpleITK fails to write.
     """
     sitk = _require_sitk()
     image = series_to_image(series)
+    for key, value in (metadata or {}).items():
+        image.SetMetaData(key, value)
     out_path = resolve_output_path(output, output_format)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -141,5 +149,6 @@ def convert_series(
         shape=tuple(int(s) for s in image.GetSize()),
         spacing_mm=tuple(float(s) for s in image.GetSpacing()),
     )
-    logger.info("Wrote %s volume %s -> %s", output_format.value, result.shape, out_path)
+    # The path stays in the returned record (callers load from it) but is not logged.
+    logger.info("Wrote %s volume %s", output_format.value, result.shape)
     return result

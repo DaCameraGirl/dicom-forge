@@ -107,8 +107,7 @@ def run_qc(series: DicomSeries) -> QCReport:
         errors=tuple(errors),
     )
     logger.info(
-        "QC %s: %s (warnings=%d errors=%d)",
-        report.series_instance_uid,
+        "QC: %s (warnings=%d errors=%d)",
         "PASS" if report.passed else "FAIL",
         len(report.warnings),
         len(report.errors),

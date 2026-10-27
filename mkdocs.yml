@@ -23,6 +23,7 @@ theme:
 nav:
   - Home: index.md
   - Concepts: concepts.md
+  - De-identification policy: deidentification-policy.md
   - CLI reference: cli.md
   - API reference: api.md
 

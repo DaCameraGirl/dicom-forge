@@ -15,9 +15,12 @@ Information (PHI).
   `.gitignore` blocks the common extensions, but treat that as a safety net, not a
   guarantee. Tests use **synthetic** data generated at runtime.
 - **De-identification is best-effort risk reduction, not a compliance guarantee.**
-  This software does not certify HIPAA, GDPR, or any other regulatory compliance.
-  Notably, it does **not** remove burned-in pixel annotations or every possible
-  private vendor tag.
+  This software does not certify HIPAA, GDPR, or any other regulatory compliance,
+  and it has not been clinically validated or certified.
+  It de-identifies DICOM **headers** only. It never analyses or removes burned-in
+  pixel annotations. It rejects series whose *metadata* signals that risk, but text
+  burned into images without such a signal is not detected. See
+  [the de-identification policy](docs/deidentification-policy.md).
 - **Validate output** before any data leaves a controlled environment, and run
   de-identification inside that environment — never after data has been exported.
 

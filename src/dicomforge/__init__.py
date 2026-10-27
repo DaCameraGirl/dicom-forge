@@ -14,6 +14,8 @@ from .config import PipelineConfig
 from .convert import convert_series
 from .deidentify import deidentify_dataset, pseudonymise
 from .exceptions import (
+    BurnedInAnnotationError,
+    ConfigurationError,
     ConversionError,
     DeidentificationError,
     DicomForgeError,
@@ -27,10 +29,12 @@ from .models import (
     DeidentificationLevel,
     DeidentificationResult,
     OutputFormat,
+    PixelPrivacyReport,
     QCReport,
     SeriesMetadata,
 )
 from .pipeline import PipelineResult, run_pipeline
+from .pixel_privacy import assess_burned_in_risk
 from .qc import run_qc
 from .segmentation import write_labelmap
 
@@ -45,6 +49,7 @@ __all__ = [
     "DicomSeries",
     "deidentify_dataset",
     "pseudonymise",
+    "assess_burned_in_risk",
     "run_qc",
     "convert_series",
     "write_labelmap",
@@ -55,10 +60,13 @@ __all__ = [
     "DeidentificationLevel",
     "ConversionResult",
     "OutputFormat",
+    "PixelPrivacyReport",
     # Errors
     "DicomForgeError",
     "IngestionError",
     "DeidentificationError",
+    "BurnedInAnnotationError",
+    "ConfigurationError",
     "ConversionError",
     "QualityControlError",
     "MissingDependencyError",

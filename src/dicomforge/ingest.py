@@ -35,7 +35,8 @@ def iter_dicom_files(root: str | Path) -> Iterator[Path]:
     """
     root_path = Path(root)
     if not root_path.exists():
-        raise IngestionError(f"Path does not exist: {root_path}")
+        # The path is not echoed: folder names often identify the patient.
+        raise IngestionError("The input path does not exist.")
     if root_path.is_file():
         yield root_path
         return
@@ -49,7 +50,7 @@ def _safe_read(path: Path) -> FileDataset | None:
     try:
         return pydicom.dcmread(path, force=False)
     except (pydicom.errors.InvalidDicomError, OSError, ValueError):
-        logger.debug("Skipping non-DICOM file: %s", path)
+        logger.debug("Skipping a non-DICOM file")  # path not logged: may identify
         return None
 
 
@@ -62,7 +63,7 @@ def group_by_series(paths: Iterable[Path]) -> dict[str, list[FileDataset]]:
             continue
         uid = getattr(ds, "SeriesInstanceUID", None)
         if uid is None:
-            logger.debug("Dataset without SeriesInstanceUID skipped: %s", path)
+            logger.debug("Skipping a dataset without SeriesInstanceUID")
             continue
         groups[str(uid)].append(ds)
     return dict(groups)
@@ -135,11 +136,10 @@ class DicomSeries:
         if self._volume is not None:
             return self._volume
         slices: list[np.ndarray] = []
-        for ds in self.datasets:
+        for index, ds in enumerate(self.datasets):
             if _PIXEL_TAG not in ds:
-                raise IngestionError(
-                    f"Dataset {getattr(ds, 'SOPInstanceUID', '?')} has no pixel data."
-                )
+                # Slice position, not SOPInstanceUID: this text reaches QC reports.
+                raise IngestionError(f"Slice {index} (sorted order) has no pixel data.")
             arr = ds.pixel_array.astype(np.float32)
             slope = float(getattr(ds, "RescaleSlope", 1) or 1)
             intercept = float(getattr(ds, "RescaleIntercept", 0) or 0)
@@ -164,20 +164,23 @@ def load_series(path: str | Path, *, series_uid: str | None = None) -> DicomSeri
     """
     groups = group_by_series(iter_dicom_files(path))
     if not groups:
-        raise EmptySeriesError(f"No readable DICOM series found under: {path}")
+        raise EmptySeriesError("No readable DICOM series found in the input.")
 
     if series_uid is not None:
         if series_uid not in groups:
-            raise IngestionError(f"Series {series_uid} not found. Available: {sorted(groups)}")
+            # Original UIDs are identifiers; list them with `dicomforge inspect` instead.
+            raise IngestionError(
+                f"The requested series was not found among the {len(groups)} series in the "
+                "input. Run `dicomforge inspect` on the input to list them."
+            )
         chosen = series_uid
     elif len(groups) == 1:
         chosen = next(iter(groups))
     else:
         chosen = max(groups, key=lambda uid: len(groups[uid]))
         logger.debug(
-            "Multiple series found (%d); selecting largest %s with %d instances.",
+            "Multiple series found (%d); selecting the largest, with %d instances.",
             len(groups),
-            chosen,
             len(groups[chosen]),
         )
     return DicomSeries(groups[chosen], source_path=str(path))

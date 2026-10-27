@@ -9,8 +9,12 @@ serialisation for audit trails, and self-documenting schemas that the CLI and th
 from __future__ import annotations
 
 from enum import Enum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
+
+#: What to do with a series flagged for burned-in annotation risk.
+BurnedInPolicy = Literal["reject", "allow"]
 
 
 class _Frozen(BaseModel):
@@ -81,13 +85,45 @@ class QCReport(_Frozen):
 
 
 class DeidentificationResult(_Frozen):
-    """Audit record describing what de-identification changed."""
+    """Audit record describing what de-identification changed.
+
+    For a pipeline run this is the union over every instance in the series. Element
+    paths inside sequences are written ``Sequence[].Keyword``.
+    """
 
     level: DeidentificationLevel
     removed_tags: tuple[str, ...]
     blanked_tags: tuple[str, ...]
-    pseudonymised_patient_id: str | None = None
+    pseudonymised_patient_id: str | None = Field(
+        default=None, description="The pseudonym, when the series maps to exactly one."
+    )
     retained_safe_tags: tuple[str, ...] = ()
+    instances: int = Field(default=1, ge=0, description="Instances this record covers.")
+    replaced_uids: tuple[str, ...] = ()
+    removed_private_tags: int = Field(default=0, ge=0)
+    pseudonymised_patient_ids: tuple[str, ...] = ()
+
+
+class PixelPrivacyReport(_Frozen):
+    """What is known about identifying content in the pixel data of a series.
+
+    Pixel data is never analysed or modified, so ``pixel_content_verified`` and
+    ``pixels_modified`` are always False. ``status`` is ``"flagged"`` when metadata
+    indicates known or suspected burned-in annotation, else ``"unverified"``. A
+    missing or ``NO`` BurnedInAnnotation indicator is not proof of clean pixels.
+    """
+
+    status: Literal["flagged", "unverified"]
+    policy: BurnedInPolicy
+    instances: int = Field(ge=0)
+    instances_flagged: int = Field(default=0, ge=0)
+    reasons: tuple[str, ...] = Field(default=(), description="Reason codes, no values.")
+    burned_in_annotation: dict[str, int] = Field(
+        default_factory=dict,
+        description="Instance counts per BurnedInAnnotation value: YES, NO, absent, other.",
+    )
+    pixels_modified: Literal[False] = False
+    pixel_content_verified: Literal[False] = False
 
 
 class ConversionResult(_Frozen):

@@ -19,6 +19,8 @@
     <a href="README.ar.md"><img src="https://img.shields.io/badge/🇸🇦_العربية-1e293b?style=for-the-badge" alt="العربية"/></a>
 </p>
 
+> **Translation note:** this translation has not been reviewed by a native speaker. The [English README](README.md) is authoritative, especially for the privacy limitations.
+
 <p align="center">
   <img src="docs/assets/deid-scanner.svg" alt="DICOM 匿名化アニメーション — X線と書類の名前消去" width="520"/>
 </p>
@@ -30,7 +32,7 @@
   <img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-orange.svg" alt="License"/>
 </p>
 
-**[3D Slicer](https://www.slicer.org/) と [ITK-SNAP](http://www.itksnap.org/) 向けのエンタープライズ DICOM パイプライン。**
+**[3D Slicer](https://www.slicer.org/) と [ITK-SNAP](http://www.itksnap.org/) 向けの研究用 DICOM パイプライン。**
 
 `dicom-forge` は DICOM フォルダを **匿名化**（患者名・ID をヘッダから除去）し、**QC** を実行して NIfTI / NRRD / `.seg.nrrd` に **変換**します。各実行で監査レコードを生成します。
 
@@ -70,8 +72,11 @@ dicomforge inspect ./study
 # Run QC and print a report
 dicomforge qc ./study
 
-# Full pipeline: de-identify -> QC -> convert to Slicer NRRD
-dicomforge convert ./study ./out/patient01 --format nrrd --deid-level moderate
+# A private per-project secret keeps pseudonyms stable across runs (never commit it)
+export DICOMFORGE_PSEUDONYM_SECRET="<from your secrets manager>"
+
+# Full pipeline: burned-in check -> de-identify -> QC -> convert to Slicer NRRD
+dicomforge convert ./study ./out/case01 --format nrrd --deid-level moderate
 ```
 
 ### Python
@@ -81,23 +86,24 @@ from dicomforge import run_pipeline, PipelineConfig, OutputFormat
 
 result = run_pipeline(
     "./study",
-    "./out/patient01",
+    "./out/case01",
     config=PipelineConfig(output_format=OutputFormat.NRRD),
 )
-print(result.qc.passed)                 # True / False
-print(result.conversion.output_path)    # ./out/patient01.nrrd
-print(result.model_dump_json(indent=2)) # full audit record
+print(result.qc.passed)  # True / False
+print(result.pixel_privacy.status)  # "unverified" (never "clean"): pixels are not analysed
+print(result.conversion.output_path)  # ./out/case01.nrrd
+print(result.model_dump_json(indent=2))  # full audit record
 ```
 
 ## パイプライン順序
 
 ```
-ingest ──> de-identify ──> QC ──> convert
+ingest ──> burned-in check ──> de-identify ──> QC ──> convert
 ```
 
 匿名化は変換**前**、**メモリ内**処理。
 
-> ⚠️ **リスク低減であり法的保証ではありません。**
+> ⚠️ **検証済みの匿名化ツールではありません。** 匿名化されるのは DICOM ヘッダーのみで、ピクセルデータは解析しません。メタデータが焼き込み文字を示すシリーズは拒否されますが、それ以外の焼き込み文字は検出されません。規制上・臨床上の検証は行われていません。[匿名化ポリシー](docs/deidentification-policy.md)（英語）を確認し、共有前に出力を確認してください。
 
 ## 開発
 
